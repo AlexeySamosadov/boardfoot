@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Woodworking Cut List Calculator — Total Board Feet &amp; Cost for a Project</title>
+<meta name="description" content="A free woodworking cut list calculator: add every part of your project, get per-row board feet, a running total, and the project cost. Print or export it for the lumberyard.">
+<link rel="canonical" href="https://alexeysamosadov.github.io/boardfoot/woodworking-cut-list-calculator.html">
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,#1b140e,#15100b);color:#f3e7d6;line-height:1.65;margin:0}
+  .wrap{max-width:720px;margin:0 auto;padding:30px 18px 60px}
+  h1{color:#e0a35a;font-size:26px;margin:0 0 4px}
+  h2{color:#c8893f;font-size:18px;margin:26px 0 6px}
+  a{color:#e0a35a}
+  .cta{display:inline-block;background:linear-gradient(135deg,#e0a35a,#9a5f23);color:#241a10;
+    font-weight:700;text-decoration:none;padding:12px 20px;border-radius:10px;margin:22px 0}
+  table{border-collapse:collapse;margin:10px 0;font-size:14.5px;width:100%}
+  th,td{border:1px solid #4a371f;padding:8px 10px;text-align:left}
+  th{background:#2c2017;color:#c8893f}
+  ul{padding-left:20px}
+  footer{color:#b9a489;font-size:12.5px;margin-top:36px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Woodworking Cut List Calculator</h1>
+  <p>A <strong>cut list</strong> is the parts breakdown of a project: every board you need, with its thickness, width, length and quantity. Calculating board feet one piece at a time is fine for a single board, but a real project — a table, a dresser, a set of cabinets — has a dozen different parts. A cut list lets you total them all so you buy the right amount of lumber once.</p>
+
+  <h2>Why woodworkers build a cut list before buying</h2>
+  <ul>
+    <li><strong>Buy the right quantity.</strong> Summing board feet across every part tells you exactly how much rough stock to order — no second trip, no leftover pile.</li>
+    <li><strong>Know the cost up front.</strong> Multiply total board feet by the yard's price per board foot to price the whole build before you commit.</li>
+    <li><strong>Hand it to the lumberyard.</strong> A printed or exported cut list speeds up your order and avoids miscommunication at the counter.</li>
+    <li><strong>Account for waste.</strong> Most woodworkers add 10–20% to cover defects, snipe, and squaring up rough lumber.</li>
+  </ul>
+
+  <h2>Example: a small side table</h2>
+  <table>
+    <tr><th>Part</th><th>Size</th><th>Qty</th><th>Board feet</th></tr>
+    <tr><td>Top</td><td>1″ × 18″ × 2 ft</td><td>1</td><td>3.00</td></tr>
+    <tr><td>Legs</td><td>2″ × 2″ × 2 ft</td><td>4</td><td>2.67</td></tr>
+    <tr><td>Aprons</td><td>1″ × 4″ × 16 in</td><td>4</td><td>1.78</td></tr>
+    <tr><td colspan="3"><strong>Total</strong></td><td><strong>7.45 bf</strong></td></tr>
+  </table>
+  <p>At $7/bf that's about <strong>$52</strong> in lumber — before adding a waste factor. Each row uses the same board-foot formula: <em>(T × W × L × Qty) ÷ 144</em>, all in inches.</p>
+
+  <a class="cta" href="./">Open the free Cut List Calculator →</a>
+
+  <p>BoardFoot keeps your cut list saved on your device, totals board feet and cost live, and (with Pro) lets you save multiple named lists and export them to CSV or print for the lumberyard. See the <a href="./board-foot-calculator.html">board foot formula explained</a> for the underlying math.</p>
+
+  <footer>
+    BoardFoot · free &amp; offline board-foot tools · <a href="./">calculator</a> ·
+    <a href="https://github.com/AlexeySamosadov/boardfoot">source</a>
+  </footer>
+</div>
+</body>
+</html>

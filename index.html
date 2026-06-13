@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BoardFoot — Board Foot & Cut List Calculator for Woodworkers</title>
+<meta name="description" content="Free, private, offline board-foot calculator with a cut list and project cost estimator. Accurate board feet = (T × W × L × qty) ÷ 144. Built for woodworkers — no account, works on your phone.">
+<link rel="canonical" href="https://alexeysamosadov.github.io/boardfoot/">
+<meta property="og:title" content="BoardFoot — Board Foot & Cut List Calculator">
+<meta property="og:description" content="Accurate board-foot calculator + cut list + project cost. Free, private, works offline.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --bg:#1b140e; --bg2:#241a12; --panel:#2c2017; --panel2:#352719;
+    --line:#4a371f; --wood:#c8893f; --wood2:#e0a35a;
+    --wood-deep:#9a5f23; --text:#f3e7d6; --muted:#b9a489; --good:#7fb069;
+    --bad:#e07a5f; --shadow:rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #2a1f15 0%, transparent 60%),
+      linear-gradient(180deg,#1b140e 0%,#15100b 100%);
+    color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:var(--wood2)}
+  .wrap{max-width:880px;margin:0 auto;padding:18px 16px 60px}
+  header.top{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+  .logo{
+    width:42px;height:42px;border-radius:10px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--wood2),var(--wood-deep));
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    box-shadow:0 4px 14px var(--shadow);
+  }
+  .brand h1{font-size:21px;margin:0;letter-spacing:.3px}
+  .brand p{margin:0;font-size:12.5px;color:var(--muted)}
+  .pro-chip{margin-left:auto;font-size:12px;border:1px solid var(--wood-deep);
+    color:var(--wood2);padding:5px 11px;border-radius:999px;cursor:pointer;
+    background:rgba(200,137,63,.08);white-space:nowrap}
+  .pro-chip.on{background:var(--wood-deep);color:#fff;border-color:var(--wood-deep)}
+
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid #3d2c1a;border-radius:14px;padding:18px;margin:14px 0;
+    box-shadow:0 6px 20px var(--shadow)}
+  .card h2{margin:0 0 4px;font-size:16px;color:var(--wood2)}
+  .card .hint{margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+
+  .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+  input,select{
+    width:100%;background:#1d150e;border:1px solid #4a371f;color:var(--text);
+    border-radius:9px;padding:10px 11px;font-size:15px;outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  input:focus,select:focus{border-color:var(--wood);box-shadow:0 0 0 3px rgba(200,137,63,.15)}
+  .row{display:flex;gap:8px}
+  .row > *{flex:1}
+  .seg{display:flex;border:1px solid #4a371f;border-radius:9px;overflow:hidden}
+  .seg button{flex:1;background:#1d150e;color:var(--muted);border:0;padding:9px 6px;
+    font-size:13px;cursor:pointer;transition:background .12s}
+  .seg button.active{background:var(--wood-deep);color:#fff}
+
+  .btn{background:linear-gradient(135deg,var(--wood2),var(--wood-deep));color:#241a10;
+    border:0;border-radius:10px;padding:11px 16px;font-size:14.5px;font-weight:700;
+    cursor:pointer;box-shadow:0 3px 10px var(--shadow)}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.ghost{background:transparent;color:var(--wood2);border:1px solid var(--wood-deep);
+    font-weight:600;box-shadow:none}
+  .btn.sm{padding:7px 12px;font-size:13px}
+  .btnbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+
+  .result{display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;
+    background:#1d150e;border:1px solid #4a371f;border-radius:11px;padding:14px 16px}
+  .result .big{font-size:30px;font-weight:800;color:var(--wood2);line-height:1}
+  .result .lbl{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:5px}
+
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+  th,td{text-align:right;padding:9px 8px;border-bottom:1px solid #3a2a19}
+  th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  th:first-child,td:first-child{text-align:left}
+  td.name{color:var(--text);font-weight:600}
+  .xbtn{background:none;border:0;color:var(--bad);cursor:pointer;font-size:18px;padding:0 4px;line-height:1}
+  .totrow td{border-top:2px solid #4a371f;border-bottom:0;font-weight:800;color:var(--wood2);font-size:15px}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:18px 0}
+
+  .pro-lock{border:1px dashed var(--wood-deep);border-radius:11px;padding:13px 15px;
+    margin-top:12px;font-size:13px;color:var(--muted);background:rgba(200,137,63,.05)}
+  .pro-lock b{color:var(--wood2)}
+
+  details.savedlists summary{cursor:pointer;color:var(--wood2);font-size:13.5px;margin-bottom:6px}
+  .savedrow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #3a2a19;font-size:13.5px}
+  .savedrow .nm{flex:1}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px;line-height:1.8}
+  footer a{color:var(--muted);text-decoration:underline}
+
+  /* modal */
+  .modalbg{position:fixed;inset:0;background:rgba(0,0,0,.66);display:flex;
+    align-items:flex-start;justify-content:center;padding:24px 14px;z-index:50;overflow:auto}
+  .modal{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid #4a371f;
+    border-radius:16px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+  .modal h3{margin:0 0 2px;font-size:19px;color:var(--wood2)}
+  .modal .price{font-size:13px;color:var(--muted);margin:0 0 14px}
+  .modal ul{margin:0 0 14px;padding-left:20px;font-size:13.5px}
+  .modal ul li{margin:4px 0}
+  .walletbox{display:flex;gap:8px;margin:4px 0 12px}
+  .walletbox input{font-family:ui-monospace,Menlo,monospace;font-size:12px}
+  .msg-ok{color:var(--good);font-size:13px;min-height:18px;margin-top:6px}
+  .msg-err{color:var(--bad);font-size:13px;min-height:18px;margin-top:6px}
+  .closex{float:right;background:none;border:0;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+  code.kbd{background:#1d150e;border:1px solid #4a371f;border-radius:6px;padding:1px 6px;font-size:12px}
+  .tabbar{display:flex;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+  .tabbar button{background:#1d150e;border:1px solid #4a371f;color:var(--muted);
+    border-radius:9px;padding:8px 13px;font-size:13.5px;cursor:pointer}
+  .tabbar button.active{background:var(--wood-deep);color:#fff;border-color:var(--wood-deep)}
+  @media print{
+    body{background:#fff;color:#000}
+    header.top,.pro-chip,.btnbar,.tabbar,footer,.bfcalc,.proextra,.pro-lock,#linhelp,.savedlists{display:none!important}
+    .card{box-shadow:none;border:1px solid #000;background:#fff}
+    th,td{color:#000;border-color:#999}
+    .card h2,.totrow td,.result .big{color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">🪵</div>
+    <div class="brand">
+      <h1>BoardFoot</h1>
+      <p>Board-foot &amp; cut-list calculator for woodworkers</p>
+    </div>
+    <div id="proChip" class="pro-chip" onclick="openLicense()">Get Pro</div>
+  </header>
+
+  <!-- ===================== BOARD FOOT CALCULATOR ===================== -->
+  <div class="card bfcalc">
+    <h2>Board Foot Calculator</h2>
+    <p class="hint">Board feet = (Thickness&nbsp;×&nbsp;Width&nbsp;×&nbsp;Length&nbsp;×&nbsp;Qty)&nbsp;÷&nbsp;144, with all dimensions in inches.</p>
+
+    <div class="tabbar" id="unitTabs">
+      <button data-u="in" class="active" onclick="setUnit('in')">Inches</button>
+      <button data-u="metric" onclick="setUnit('metric')">Metric (cm/mm)</button>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label id="lblT">Thickness (in)</label>
+        <input id="t" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 1" oninput="calcBF()">
+      </div>
+      <div>
+        <label id="lblW">Width (in)</label>
+        <input id="w" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 12" oninput="calcBF()">
+      </div>
+      <div>
+        <label id="lblL">Length</label>
+        <div class="row">
+          <input id="l" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 1" oninput="calcBF()">
+          <select id="lunit" style="flex:0 0 86px" onchange="calcBF()">
+            <option value="ft">feet</option>
+            <option value="in">inches</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label>Quantity</label>
+        <input id="q" type="number" inputmode="numeric" step="1" min="1" value="1" oninput="calcBF()">
+      </div>
+      <div>
+        <label>Price / board foot ($, optional)</label>
+        <input id="p" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 6.50" oninput="calcBF()">
+      </div>
+      <div>
+        <label>Name (for cut list)</label>
+        <input id="nm" type="text" placeholder="e.g. Tabletop" maxlength="40">
+      </div>
+    </div>
+
+    <div class="result">
+      <div>
+        <div class="big" id="bfOut">0.00</div>
+        <div class="lbl">Board Feet</div>
+      </div>
+      <div>
+        <div class="big" id="costOut">$0.00</div>
+        <div class="lbl">Cost</div>
+      </div>
+    </div>
+
+    <div class="btnbar">
+      <button class="btn" onclick="addToCutList()">＋ Add to cut list</button>
+      <button class="btn ghost sm" onclick="clearBF()">Clear</button>
+    </div>
+  </div>
+
+  <!-- ===================== CUT LIST ===================== -->
+  <div class="card">
+    <h2>Cut List</h2>
+    <p class="hint">Build your full project here. Totals update live and save automatically on this device.</p>
+    <div style="overflow-x:auto">
+      <table id="cutTable">
+        <thead>
+          <tr>
+            <th>Item</th><th>T (in)</th><th>W (in)</th><th>L</th><th>Qty</th><th>Bd ft</th><th>Cost</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="cutBody"></tbody>
+        <tfoot id="cutFoot"></tfoot>
+      </table>
+    </div>
+    <div class="btnbar">
+      <button class="btn ghost sm" onclick="clearCutList()">Clear list</button>
+      <button class="btn ghost sm proextra" onclick="saveCurrentList()">💾 Save list (Pro)</button>
+      <button class="btn ghost sm proextra" onclick="exportCSV()">⬇ CSV (Pro)</button>
+      <button class="btn ghost sm proextra" onclick="window.print()">🖨 Print (Pro)</button>
+    </div>
+
+    <div class="pro-lock proextra" id="proLock">
+      <b>Pro</b> unlocks: save &amp; name multiple cut lists, CSV / print export for the lumberyard, and the Doyle log-scale calculator. <a href="#" onclick="openLicense();return false;">Unlock for $9 →</a>
+    </div>
+
+    <details class="savedlists proextra" id="savedWrap" style="margin-top:14px">
+      <summary>Saved cut lists</summary>
+      <div id="savedBody"></div>
+    </details>
+  </div>
+
+  <!-- ===================== LINEAR HELPER ===================== -->
+  <div class="card" id="linhelp">
+    <h2>Linear / Length Helper</h2>
+    <p class="hint">Quick conversions for ordering by the running foot. Board feet already accounts for thickness &amp; width — this is just for linear measurement.</p>
+    <div class="grid">
+      <div>
+        <label>Total length needed (ft)</label>
+        <input id="linFt" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 24" oninput="calcLinear()">
+      </div>
+      <div>
+        <label>Stock length per board (ft)</label>
+        <input id="linStock" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 8" oninput="calcLinear()">
+      </div>
+      <div>
+        <label>Waste factor (%)</label>
+        <input id="linWaste" type="number" inputmode="decimal" step="any" min="0" value="10" oninput="calcLinear()">
+      </div>
+    </div>
+    <div class="result">
+      <div><div class="big" id="linTotal">0</div><div class="lbl">Total ft (w/ waste)</div></div>
+      <div><div class="big" id="linBoards">0</div><div class="lbl">Boards to buy</div></div>
+    </div>
+  </div>
+
+  <!-- ===================== DOYLE LOG (PRO) ===================== -->
+  <div class="card proextra" id="doyleCard">
+    <h2>Doyle Log Scale <span style="font-size:11px;color:var(--muted)">· Pro</span></h2>
+    <p class="hint">Estimate board feet of lumber in a log. Doyle rule: BF = ((D − 4)² ÷ 16) × Length, where D = small-end diameter inside bark (in), Length in feet.</p>
+    <div class="grid">
+      <div>
+        <label>Small-end diameter (in)</label>
+        <input id="dD" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 16" oninput="calcDoyle()">
+      </div>
+      <div>
+        <label>Log length (ft)</label>
+        <input id="dL" type="number" inputmode="decimal" step="any" min="0" placeholder="e.g. 12" oninput="calcDoyle()">
+      </div>
+      <div>
+        <label>Number of logs</label>
+        <input id="dN" type="number" inputmode="numeric" step="1" min="1" value="1" oninput="calcDoyle()">
+      </div>
+    </div>
+    <div class="result">
+      <div><div class="big" id="doyleOut">0</div><div class="lbl">Board feet (Doyle)</div></div>
+    </div>
+  </div>
+
+  <footer>
+    100% private &amp; offline — nothing leaves your device. No account, no tracking.<br>
+    <a href="./board-foot-calculator.html">Board foot formula</a> ·
+    <a href="./woodworking-cut-list-calculator.html">Why a cut list</a> ·
+    <a href="https://github.com/AlexeySamosadov/boardfoot">Source</a><br>
+    Made for r/woodworking &amp; r/BeginnerWoodWorking 🪵
+  </footer>
+</div>
+
+<script>
+/* ============================ LICENSING ============================ */
+const PUBLIC_JWK = {"kty":"EC","x":"PsZzrsr3jbdTfBT1b68dcVyQkcXFuROaU44rnwxqVHI","y":"wONJkxZA65IbCxoPBc2q5H8LgJSRcUZTRTjOBVSdqkU","crv":"P-256"};
+const PAY = { wallet:"0xe339997037C7e1C81829fA3e110d3e82B4bDd48E", chain:"Base", token:"USDC", price:"9", contact:"https://github.com/AlexeySamosadov/boardfoot/issues/new" };
+let pro = false;
+
+function fromB(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s);const a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
+async function verifyLicense(str){try{const[p,sg]=str.trim().split(".");if(!p||!sg)return null;const k=await crypto.subtle.importKey("jwk",PUBLIC_JWK,{name:"ECDSA",namedCurve:"P-256"},false,["verify"]);if(!await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},k,fromB(sg),fromB(p)))return null;const pl=JSON.parse(new TextDecoder().decode(fromB(p)));if(pl.exp&&Math.floor(Date.now()/1000)>pl.exp)return{expired:true};return pl;}catch(e){return null;}}
+async function applyLicense(str,silent){const pl=await verifyLicense(str);if(pl&&!pl.expired&&pl.plan==="pro"){pro=true;localStorage.setItem("boardfoot_license",str);if(typeof render==="function")render();if(!silent){const o=document.querySelector("#licOk");if(o)o.textContent="Unlocked — thank you";setTimeout(()=>{const b=document.querySelector("#licBg");if(b)b.remove();},800);}return true;}if(!silent){const e=document.querySelector("#licErr");if(e)e.textContent=pl&&pl.expired?"License expired.":"Invalid key.";}return false;}
+
+function openLicense(){
+  if(document.querySelector("#licBg")) return;
+  const bg=document.createElement("div");
+  bg.id="licBg"; bg.className="modalbg";
+  bg.addEventListener("click",e=>{if(e.target===bg)bg.remove();});
+  bg.innerHTML=`
+    <div class="modal">
+      <button class="closex" onclick="document.querySelector('#licBg').remove()">×</button>
+      <h3>BoardFoot Pro</h3>
+      <p class="price">$${PAY.price} one-time · pay in ${PAY.token} on ${PAY.chain} · lifetime · works offline</p>
+      <ul>
+        <li>Save &amp; name unlimited cut lists</li>
+        <li>CSV &amp; print export for the lumberyard</li>
+        <li>Doyle log-scale board-foot calculator</li>
+        <li>Same private, offline, no-account tool</li>
+      </ul>
+      <label>1 · Send $${PAY.price} ${PAY.token} (${PAY.chain}) to:</label>
+      <div class="walletbox">
+        <input id="walletAddr" readonly value="${PAY.wallet}">
+        <button class="btn sm" onclick="copyWallet()">Copy</button>
+      </div>
+      <label>2 · Paste your payment tx hash + email, then request your key:</label>
+      <input id="txh" placeholder="0x… transaction hash" style="margin-bottom:8px">
+      <input id="email" placeholder="your@email.com (where to reach you)" style="margin-bottom:10px">
+      <button class="btn" style="width:100%" onclick="requestKey()">Get my key →</button>
+      <div class="msg-err" id="licErr"></div>
+
+      <details style="margin-top:14px">
+        <summary style="cursor:pointer;color:var(--wood2);font-size:13.5px">Have a key?</summary>
+        <input id="licKey" placeholder="paste license key" style="margin:10px 0 8px">
+        <button class="btn ghost sm" onclick="activateKey()">Activate</button>
+        <div class="msg-ok" id="licOk"></div>
+      </details>
+    </div>`;
+  document.body.appendChild(bg);
+}
+function copyWallet(){const i=document.querySelector("#walletAddr");i.select();try{navigator.clipboard.writeText(PAY.wallet);}catch(e){document.execCommand("copy");}const e=document.querySelector("#licErr");if(e){e.style.color="var(--good)";e.textContent="Wallet copied";setTimeout(()=>{e.textContent="";e.style.color="";},1500);}}
+function requestKey(){const tx=(document.querySelector("#txh").value||"").trim();const em=(document.querySelector("#email").value||"").trim();if(!tx){document.querySelector("#licErr").textContent="Paste your payment tx hash first.";return;}window.open(PAY.contact+"?title=BoardFoot%20Pro%20license%20request&body="+encodeURIComponent("Payment tx hash: "+tx+"\nEmail: "+em),"_blank");}
+function activateKey(){const k=(document.querySelector("#licKey").value||"").trim();if(!k){document.querySelector("#licErr").textContent="Paste a key.";return;}applyLicense(k,false);}
+
+/* ============================ STATE ============================ */
+const LS_LIST="boardfoot_cutlist", LS_SAVED="boardfoot_saved";
+let cutList = [];      // [{name,t,w,l,lunit,q,p}]
+let unitMode = "in";   // "in" | "metric"
+
+function loadState(){
+  try{const c=JSON.parse(localStorage.getItem(LS_LIST));if(Array.isArray(c))cutList=c;}catch(e){}
+}
+
+/* ============================ MATH ============================ */
+// Convert a metric value to inches given the chosen sub-unit.
+function toInches(val, mUnit){ // mUnit: "cm" | "mm" | "in" (passthrough)
+  if(mUnit==="cm") return val/2.54;
+  if(mUnit==="mm") return val/25.4;
+  return val;
+}
+// Core board feet for one line item. All linear dims resolved to inches.
+function boardFeet(tIn, wIn, lIn, qty){
+  return (tIn * wIn * lIn * qty) / 144;
+}
+// Resolve a row's length to inches from its stored length + length unit.
+function rowLengthInches(l, lunit){
+  if(lunit==="ft") return l*12;
+  if(lunit==="cm") return l/2.54;
+  if(lunit==="mm") return l/25.4;
+  return l; // inches
+}
+function rowBF(r){
+  let t=r.t, w=r.w;
+  // rows store t/w already in inches; lunit drives length conversion
+  return boardFeet(t, w, rowLengthInches(r.l, r.lunit), r.q);
+}
+
+const num = (id)=>{const v=parseFloat(document.querySelector("#"+id).value);return isFinite(v)?v:0;};
+
+function setUnit(u){
+  unitMode=u;
+  document.querySelectorAll("#unitTabs button").forEach(b=>b.classList.toggle("active",b.dataset.u===u));
+  const lsel=document.querySelector("#lunit");
+  if(u==="metric"){
+    document.querySelector("#lblT").textContent="Thickness (cm)";
+    document.querySelector("#lblW").textContent="Width (cm)";
+    document.querySelector("#lblL").textContent="Length";
+    lsel.innerHTML='<option value="cm">cm</option><option value="mm">mm</option><option value="m">m</option>';
+  }else{
+    document.querySelector("#lblT").textContent="Thickness (in)";
+    document.querySelector("#lblW").textContent="Width (in)";
+    document.querySelector("#lblL").textContent="Length";
+    lsel.innerHTML='<option value="ft">feet</option><option value="in">inches</option>';
+  }
+  calcBF();
+}
+
+// Returns {tIn, wIn, lIn, q, p} from current inputs honoring unit mode.
+function readBFInputs(){
+  let t=num("t"), w=num("w"), l=num("l"), q=num("q")||1, p=num("p");
+  let lunit=document.querySelector("#lunit").value;
+  let tIn, wIn, lIn;
+  if(unitMode==="metric"){
+    tIn=toInches(t,"cm"); wIn=toInches(w,"cm");
+    if(lunit==="cm") lIn=l/2.54;
+    else if(lunit==="mm") lIn=l/25.4;
+    else lIn=(l*100)/2.54; // meters
+  }else{
+    tIn=t; wIn=w;
+    lIn=(lunit==="ft")? l*12 : l;
+  }
+  return {t,w,l,lunit,tIn,wIn,lIn,q,p};
+}
+
+function calcBF(){
+  const I=readBFInputs();
+  const bf=boardFeet(I.tIn,I.wIn,I.lIn,I.q);
+  const cost=bf*I.p;
+  document.querySelector("#bfOut").textContent=bf.toFixed(2);
+  document.querySelector("#costOut").textContent="$"+(cost||0).toFixed(2);
+}
+
+function clearBF(){
+  ["t","w","l","p","nm"].forEach(id=>document.querySelector("#"+id).value="");
+  document.querySelector("#q").value="1";
+  calcBF();
+}
+
+/* ============================ CUT LIST ============================ */
+function addToCutList(){
+  const I=readBFInputs();
+  if(!(I.tIn>0&&I.wIn>0&&I.lIn>0)){
+    const o=document.querySelector("#bfOut"); o.style.color="var(--bad)";
+    setTimeout(()=>o.style.color="",700); return;
+  }
+  const name=(document.querySelector("#nm").value||"").trim() || ("Item "+(cutList.length+1));
+  // Store dims already converted to inches so the list is unit-agnostic & always correct.
+  let storedLen, storedLunit;
+  if(unitMode==="metric"){ storedLen=I.lIn; storedLunit="in"; }
+  else { storedLen=I.l; storedLunit=I.lunit; }
+  cutList.push({name, t:I.tIn, w:I.wIn, l:storedLen, lunit:storedLunit, q:I.q, p:I.p});
+  persistList(); render();
+}
+function removeRow(i){ cutList.splice(i,1); persistList(); render(); }
+function clearCutList(){ if(cutList.length && !confirm("Clear the whole cut list?"))return; cutList=[]; persistList(); render(); }
+function persistList(){ try{localStorage.setItem(LS_LIST,JSON.stringify(cutList));}catch(e){} }
+
+function fmtLen(r){
+  if(r.lunit==="ft") return r.l+"′";
+  return (+r.l.toFixed(2))+'″';
+}
+
+function render(){
+  // pro chip & gated UI
+  const chip=document.querySelector("#proChip");
+  chip.textContent = pro ? "Pro ✓" : "Get Pro";
+  chip.classList.toggle("on",pro);
+  document.querySelectorAll(".proextra").forEach(el=>{
+    if(el.id==="proLock") el.style.display = pro ? "none":"";
+    else if(el.id==="doyleCard") el.style.display = pro ? "":"none";
+    else if(el.id==="savedWrap") el.style.display = pro ? "":"none";
+    else el.style.display="";
+  });
+
+  const body=document.querySelector("#cutBody"), foot=document.querySelector("#cutFoot");
+  body.innerHTML=""; foot.innerHTML="";
+  let totBF=0, totCost=0, anyCost=false;
+  if(cutList.length===0){
+    body.innerHTML='<tr><td colspan="8" class="empty">No items yet — add a cut above to start your list.</td></tr>';
+  }else{
+    cutList.forEach((r,i)=>{
+      const bf=rowBF(r); totBF+=bf;
+      const c=bf*(r.p||0); if(r.p)anyCost=true; totCost+=c;
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td class="name">${escapeHtml(r.name)}</td>
+        <td>${trim(r.t)}</td><td>${trim(r.w)}</td><td>${fmtLen(r)}</td>
+        <td>${r.q}</td><td>${bf.toFixed(2)}</td>
+        <td>${r.p?("$"+c.toFixed(2)):"—"}</td>
+        <td><button class="xbtn" title="Remove" onclick="removeRow(${i})">×</button></td>`;
+      body.appendChild(tr);
+    });
+    foot.innerHTML=`<tr class="totrow"><td>Total (${cutList.length} item${cutList.length>1?"s":""})</td>
+      <td></td><td></td><td></td><td></td><td>${totBF.toFixed(2)}</td>
+      <td>${anyCost?("$"+totCost.toFixed(2)):"—"}</td><td></td></tr>`;
+  }
+  renderSaved();
+}
+function trim(n){ return (+(+n).toFixed(3)).toString(); }
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+/* ============================ LINEAR HELPER ============================ */
+function calcLinear(){
+  const need=num("linFt"), stock=num("linStock"), waste=num("linWaste");
+  const total=need*(1+waste/100);
+  document.querySelector("#linTotal").textContent = total ? total.toFixed(1) : "0";
+  document.querySelector("#linBoards").textContent = (stock>0&&total>0) ? Math.ceil(total/stock) : "0";
+}
+
+/* ============================ DOYLE (PRO) ============================ */
+function calcDoyle(){
+  const D=num("dD"), L=num("dL"), N=num("dN")||1;
+  let bf=0;
+  if(D>4 && L>0){ bf=(Math.pow(D-4,2)/16)*L*N; }
+  document.querySelector("#doyleOut").textContent = bf ? Math.round(bf).toString() : "0";
+}
+
+/* ============================ PRO: SAVED LISTS ============================ */
+function getSaved(){ try{return JSON.parse(localStorage.getItem(LS_SAVED))||[];}catch(e){return [];} }
+function setSaved(a){ try{localStorage.setItem(LS_SAVED,JSON.stringify(a));}catch(e){} }
+function saveCurrentList(){
+  if(!pro) return openLicense();
+  if(cutList.length===0){ alert("Add some items to the cut list first."); return; }
+  const name=(prompt("Name this cut list:","")||"").trim();
+  if(!name) return;
+  const saved=getSaved();
+  saved.push({name, ts:Date.now(), items:JSON.parse(JSON.stringify(cutList))});
+  setSaved(saved); renderSaved();
+  const w=document.querySelector("#savedWrap"); if(w) w.open=true;
+}
+function loadSaved(i){
+  const saved=getSaved(); if(!saved[i])return;
+  if(cutList.length && !confirm("Replace the current cut list with “"+saved[i].name+"”?"))return;
+  cutList=JSON.parse(JSON.stringify(saved[i].items)); persistList(); render();
+}
+function delSaved(i){
+  const saved=getSaved(); if(!saved[i])return;
+  if(!confirm("Delete saved list “"+saved[i].name+"”?"))return;
+  saved.splice(i,1); setSaved(saved); renderSaved();
+}
+function renderSaved(){
+  const box=document.querySelector("#savedBody"); if(!box)return;
+  const saved=getSaved();
+  if(!pro){ box.innerHTML='<div class="empty">Pro feature.</div>'; return; }
+  if(saved.length===0){ box.innerHTML='<div class="empty">No saved lists yet.</div>'; return; }
+  box.innerHTML="";
+  saved.forEach((s,i)=>{
+    const row=document.createElement("div"); row.className="savedrow";
+    let bf=0; s.items.forEach(r=>bf+=rowBF(r));
+    row.innerHTML=`<span class="nm">${escapeHtml(s.name)} <span style="color:var(--muted)">· ${s.items.length} items · ${bf.toFixed(2)} bf</span></span>
+      <button class="btn ghost sm" onclick="loadSaved(${i})">Load</button>
+      <button class="xbtn" onclick="delSaved(${i})">×</button>`;
+    box.appendChild(row);
+  });
+}
+
+/* ============================ PRO: CSV EXPORT ============================ */
+function exportCSV(){
+  if(!pro) return openLicense();
+  if(cutList.length===0){ alert("Nothing to export — add items first."); return; }
+  let rows=[["Item","Thickness_in","Width_in","Length","Length_unit","Qty","Board_feet","Price_per_bf","Cost"]];
+  let totBF=0,totCost=0;
+  cutList.forEach(r=>{
+    const bf=rowBF(r); const c=bf*(r.p||0); totBF+=bf; totCost+=c;
+    rows.push([r.name, trim(r.t), trim(r.w), trim(r.l), r.lunit, r.q, bf.toFixed(2), r.p?r.p:"", r.p?c.toFixed(2):""]);
+  });
+  rows.push(["TOTAL","","","","","",totBF.toFixed(2),"",totCost.toFixed(2)]);
+  const csv=rows.map(r=>r.map(c=>{c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;}).join(",")).join("\n");
+  const blob=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="boardfoot-cutlist.csv"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* ============================ BOOT ============================ */
+(async function init(){
+  loadState();
+  setUnit("in");
+  calcBF(); calcLinear(); calcDoyle();
+  render();
+  const saved=localStorage.getItem("boardfoot_license");
+  if(saved) await applyLicense(saved,true);
+})();
+</script>
+</body>
+</html>
