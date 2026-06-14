@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Foot vs Linear Foot — The Difference and When to Use Each</title>
+<meta name="description" content="Board foot vs linear foot explained: a board foot is volume (144 cu in), a linear foot is just length. Learn when each is used and how to convert between them.">
+<link rel="canonical" href="https://alexeysamosadov.github.io/boardfoot/board-foot-vs-linear-foot.html">
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,#1b140e,#15100b);color:#f3e7d6;line-height:1.65;margin:0}
+  .wrap{max-width:720px;margin:0 auto;padding:30px 18px 60px}
+  h1{color:#e0a35a;font-size:26px;margin:0 0 4px}
+  h2{color:#c8893f;font-size:18px;margin:26px 0 6px}
+  a{color:#e0a35a}
+  .cta{display:inline-block;background:linear-gradient(135deg,#e0a35a,#9a5f23);color:#241a10;
+    font-weight:700;text-decoration:none;padding:12px 20px;border-radius:10px;margin:22px 0}
+  table{border-collapse:collapse;margin:10px 0;font-size:14.5px;width:100%}
+  th,td{border:1px solid #4a371f;padding:8px 10px;text-align:left}
+  th{background:#2c2017;color:#c8893f}
+  code{background:#2c2017;padding:2px 6px;border-radius:5px}
+  .formula{background:#2c2017;border:1px solid #4a371f;border-radius:10px;padding:14px 16px;font-size:16px;text-align:center;margin:14px 0}
+  footer{color:#b9a489;font-size:12.5px;margin-top:36px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Board Foot vs Linear Foot</h1>
+  <p>These two units confuse a lot of woodworkers because both have "foot" in the name, but they measure completely different things. A <strong>linear foot</strong> (also called a running foot) is simply 12 inches of length — it ignores how thick or wide the board is. A <strong>board foot</strong> is a measure of <em>volume</em>: 144 cubic inches of wood, which accounts for thickness, width, and length together.</p>
+
+  <h2>The key difference</h2>
+  <p>If you walk down a board and count off every 12 inches, you are counting linear feet. An 8-foot board is 8 linear feet whether it is a narrow 1″ × 2″ or a wide 2″ × 12″. But those two boards hold very different amounts of wood, so they have very different board-foot counts. Board feet capture that difference; linear feet do not.</p>
+
+  <h2>When each is used</h2>
+  <table>
+    <tr><th>Unit</th><th>Typically used for</th></tr>
+    <tr><td>Board foot</td><td>Rough hardwood (oak, walnut, maple) sold by volume; pricing lumber where thickness and width vary.</td></tr>
+    <tr><td>Linear foot</td><td>Trim, molding, dimensional softwood, dowels, and any product with a fixed cross-section sold by length.</td></tr>
+  </table>
+  <p>The rule of thumb: when the cross-section is fixed and known (like a specific molding profile), sellers price by the linear foot. When the cross-section varies board to board (like random-width rough hardwood), they price by the board foot so the value scales with the actual wood you get.</p>
+
+  <h2>Converting between them</h2>
+  <p>You can convert linear feet to board feet only if you know the thickness and width. The shortcut for a given thickness and width is:</p>
+  <div class="formula">Board feet per linear foot = (Thickness″ × Width″) ÷ 12</div>
+  <p>Why divide by 12 instead of 144? Because a linear foot is already 12 inches long, so length is folded in. Examples:</p>
+  <table>
+    <tr><th>Board</th><th>Per linear foot</th><th>8 ft total</th></tr>
+    <tr><td>1″ × 6″</td><td>(1 × 6) ÷ 12 = 0.50 bf/ft</td><td>4.00 bf</td></tr>
+    <tr><td>1″ × 12″</td><td>(1 × 12) ÷ 12 = 1.00 bf/ft</td><td>8.00 bf</td></tr>
+    <tr><td>2″ × 6″</td><td>(2 × 6) ÷ 12 = 1.00 bf/ft</td><td>8.00 bf</td></tr>
+  </table>
+  <p>Notice the 1″ × 6″ board: 8 linear feet equals exactly 4.00 board feet, the same answer the full formula gives, because (1 × 6 × 96) ÷ 144 = 4.00. The two methods always agree.</p>
+
+  <a class="cta" href="./">Open the free Board Foot Calculator →</a>
+
+  <p>The calculator includes a separate length helper for ordering by the running foot, plus full board-foot math and a project <a href="./woodworking-cut-list-calculator.html">cut list</a>. For the underlying unit, see <a href="./what-is-a-board-foot.html">what a board foot is</a>.</p>
+
+  <footer>
+    BoardFoot · free &amp; offline board-foot tools · <a href="./">calculator</a> ·
+    <a href="https://github.com/AlexeySamosadov/boardfoot">source</a>
+  </footer>
+</div>
+</body>
+</html>

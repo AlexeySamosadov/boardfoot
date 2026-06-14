@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Calculate Board Feet — Step by Step (Feet vs Inches, Multiple Boards)</title>
+<meta name="description" content="How to calculate board feet step by step: convert length to inches, apply (T × W × L) ÷ 144, and total multiple boards. Worked examples and a free calculator.">
+<link rel="canonical" href="https://alexeysamosadov.github.io/boardfoot/how-to-calculate-board-feet.html">
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,#1b140e,#15100b);color:#f3e7d6;line-height:1.65;margin:0}
+  .wrap{max-width:720px;margin:0 auto;padding:30px 18px 60px}
+  h1{color:#e0a35a;font-size:26px;margin:0 0 4px}
+  h2{color:#c8893f;font-size:18px;margin:26px 0 6px}
+  a{color:#e0a35a}
+  .cta{display:inline-block;background:linear-gradient(135deg,#e0a35a,#9a5f23);color:#241a10;
+    font-weight:700;text-decoration:none;padding:12px 20px;border-radius:10px;margin:22px 0}
+  table{border-collapse:collapse;margin:10px 0;font-size:14.5px;width:100%}
+  th,td{border:1px solid #4a371f;padding:8px 10px;text-align:left}
+  th{background:#2c2017;color:#c8893f}
+  code{background:#2c2017;padding:2px 6px;border-radius:5px}
+  ol{padding-left:22px}
+  ol li{margin:6px 0}
+  .formula{background:#2c2017;border:1px solid #4a371f;border-radius:10px;padding:14px 16px;font-size:17px;text-align:center;margin:14px 0}
+  footer{color:#b9a489;font-size:12.5px;margin-top:36px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>How to Calculate Board Feet</h1>
+  <p>Calculating board feet is quick once you keep your units straight. A <strong>board foot</strong> is 144 cubic inches of lumber, so the whole job is measuring a board's volume in cubic inches and dividing by 144. The single most common mistake is mixing feet and inches — so we will handle that first.</p>
+
+  <h2>The formula</h2>
+  <div class="formula">Board feet = (Thickness″ × Width″ × Length″) ÷ 144</div>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li><strong>Measure thickness in inches.</strong> Use the rough/nominal thickness — 4/4 stock counts as 1″, even after planing.</li>
+    <li><strong>Measure width in inches.</strong> Use the actual face width of the board.</li>
+    <li><strong>Get the length into inches.</strong> If it is given in feet, multiply by 12. So 8 ft becomes 96 in, 10 ft becomes 120 in.</li>
+    <li><strong>Multiply all three</strong> to get cubic inches, then <strong>divide by 144</strong>.</li>
+    <li><strong>Multiply by quantity</strong> if you have several identical boards.</li>
+  </ol>
+
+  <h2>Feet vs inches — why it matters</h2>
+  <p>The formula needs <em>every</em> dimension in inches. Take a board 1″ × 6″ × 8 ft. Convert the length first: 8 ft × 12 = 96 in. Then (1 × 6 × 96) ÷ 144 = 576 ÷ 144 = <strong>4.00 board feet</strong>. If you forgot to convert and used 8 instead of 96, you would get 0.33 bf — twelve times too small. Always convert feet to inches before multiplying.</p>
+
+  <h2>Calculating multiple boards</h2>
+  <p>For several copies of the same board, calculate one and multiply by the count. Five boards of 4/4 × 8″ × 10 ft:</p>
+  <table>
+    <tr><th>Step</th><th>Value</th></tr>
+    <tr><td>Length to inches</td><td>10 ft × 12 = 120 in</td></tr>
+    <tr><td>One board</td><td>(1 × 8 × 120) ÷ 144 = 6.667 bf</td></tr>
+    <tr><td>Times quantity 5</td><td>6.667 × 5 = <strong>33.33 bf</strong></td></tr>
+  </table>
+  <p>For a project with <em>different</em> parts, calculate each part separately and add the board-foot totals together — that is exactly what a cut list does.</p>
+
+  <h2>Add cost</h2>
+  <p>Multiply total board feet by the yard's price per board foot. At $6.50/bf, those 33.33 board feet come to about <strong>$216.67</strong>. Many yards round each board up to the next quarter-foot, so treat your number as a close estimate.</p>
+
+  <a class="cta" href="./">Open the free Board Foot Calculator →</a>
+
+  <p>The calculator handles the feet-to-inches conversion for you, supports metric input, and lets you total an entire project with a <a href="./woodworking-cut-list-calculator.html">cut list</a>. For the underlying idea, see <a href="./what-is-a-board-foot.html">what a board foot is</a>.</p>
+
+  <footer>
+    BoardFoot · free &amp; offline board-foot tools · <a href="./">calculator</a> ·
+    <a href="https://github.com/AlexeySamosadov/boardfoot">source</a>
+  </footer>
+</div>
+</body>
+</html>

@@ -97,6 +97,16 @@
   footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px;line-height:1.8}
   footer a{color:var(--muted);text-decoration:underline}
 
+  .guides{margin-top:26px}
+  .guides h2{font-size:15px;color:var(--wood2);margin:0 0 4px;text-align:center}
+  .guides .hint{font-size:12px;color:var(--muted);text-align:center;margin:0 0 12px}
+  .guides ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .guides li a{display:block;background:#1d150e;border:1px solid #4a371f;border-radius:9px;
+    padding:11px 13px;color:var(--wood2);text-decoration:none;font-size:13.5px;
+    transition:border-color .15s,background .15s}
+  .guides li a:hover{border-color:var(--wood);background:#241a12}
+
   /* modal */
   .modalbg{position:fixed;inset:0;background:rgba(0,0,0,.66);display:flex;
     align-items:flex-start;justify-content:center;padding:24px 14px;z-index:50;overflow:auto}
@@ -118,7 +128,7 @@
   .tabbar button.active{background:var(--wood-deep);color:#fff;border-color:var(--wood-deep)}
   @media print{
     body{background:#fff;color:#000}
-    header.top,.pro-chip,.btnbar,.tabbar,footer,.bfcalc,.proextra,.pro-lock,#linhelp,.savedlists{display:none!important}
+    header.top,.pro-chip,.btnbar,.tabbar,footer,.bfcalc,.proextra,.pro-lock,#linhelp,.savedlists,.guides{display:none!important}
     .card{box-shadow:none;border:1px solid #000;background:#fff}
     th,td{color:#000;border-color:#999}
     .card h2,.totrow td,.result .big{color:#000}
@@ -274,6 +284,19 @@
       <div><div class="big" id="doyleOut">0</div><div class="lbl">Board feet (Doyle)</div></div>
     </div>
   </div>
+
+  <!-- ===================== GUIDES ===================== -->
+  <section class="card guides">
+    <h2>Guides</h2>
+    <p class="hint">Short, accurate explainers for measuring and buying lumber.</p>
+    <ul>
+      <li><a href="./what-is-a-board-foot.html">What is a board foot? →</a></li>
+      <li><a href="./how-to-calculate-board-feet.html">How to calculate board feet →</a></li>
+      <li><a href="./board-foot-vs-linear-foot.html">Board foot vs linear foot →</a></li>
+      <li><a href="./understanding-hardwood-lumber-dimensions.html">Hardwood lumber dimensions (4/4, 5/4…) →</a></li>
+      <li><a href="./how-much-does-hardwood-lumber-cost.html">How much does hardwood lumber cost? →</a></li>
+    </ul>
+  </section>
 
   <footer>
     100% private &amp; offline — nothing leaves your device. No account, no tracking.<br>
